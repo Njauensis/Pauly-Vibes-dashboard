@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PAULY VIBES</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Inter Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="icon-512.png">
+  <link rel="apple-touch-icon" href="icon-512.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['Fira Code', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdfa',
+              500: '#14b8a6',
+              600: '#0d9488',
+              900: '#134e4a',
+            },
+            dark: {
+              bg: '#0b0f17',
+              card: '#111827',
+              border: '#1f2937',
+              hover: '#1e293b'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b0f17;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1f2937;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #374151;
+    }
+
+    /* Glassmorphism subtle overlay */
+    .glass-card {
+      background: rgba(17, 24, 39, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    
+    .glow-cyan {
+      box-shadow: 0 0 20px -5px rgba(6, 182, 212, 0.3);
+    }
+  </style>
+</head>
+<body class="bg-dark-bg text-gray-100 font-sans min-h-screen flex flex-col justify-between p-4 md:p-8 selection:bg-cyan-500 selection:text-black">
+
+  <!-- Main Container -->
+  <div class="max-w-7xl mx-auto w-full space-y-6">
+
+    <!-- TOP HEADER -->
+    <header class="glass-card rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-2xl relative overflow-hidden">
+      <!-- Ambient Glow Behind Header -->
+      <div class="absolute -top-10 -left-10 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <!-- Greeting & Info -->
+      <div class="space-y-1 z-10">
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-xs uppercase tracking-widest font-mono text-emerald-400 font-semibold">Workspace Active</span>
+        </div>
+        <h1 id="greeting-text" class="text-2xl md:text-3xl font-bold tracking-tight text-white">
+          Hello, Pauly <span class="text-cyan-400">⚡</span>
+        </h1>
+        <p class="text-xs text-gray-400 font-mono" id="system-status-subtitle">Local IP: <span class="text-gray-200" id="local-ip-display">127.0.0.1</span> | Environment: <span class="text-cyan-400">Development</span></p>
+      </div>
+
+      <!-- Live Clock & Weather Widget -->
+      <div class="flex flex-wrap items-center gap-4 w-full md:w-auto z-10">
+        <!-- Weather Card -->
+        <div class="glass-card px-4 py-2.5 rounded-xl flex items-center gap-3 bg-gray-900/40 border border-gray-800">
+          <i id="weather-icon" class="fa-solid fa-cloud-sun text-2xl text-amber-400"></i>
+          <div>
+            <div class="text-sm font-semibold flex items-center gap-1">
+              <span id="weather-temp">24°C</span>
+              <span class="text-xs text-gray-400 font-normal" id="weather-city">Nairobi</span>
+            </div>
+            <div class="text-[10px] text-gray-400 font-mono" id="weather-desc">Partly Cloudy</div>
+          </div>
+        </div>
+
+        <!-- Clock Card -->
+        <div class="glass-card px-5 py-2.5 rounded-xl bg-gray-900/60 border border-cyan-500/20 text-right min-w-[160px]">
+          <div id="live-time" class="font-mono text-xl md:text-2xl font-bold tracking-wider text-cyan-400">
+            00:00:00
+          </div>
+          <div id="live-date" class="text-[11px] text-gray-400 font-mono uppercase tracking-wide">
+            Loading Date...
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- DASHBOARD MAIN GRID -->
+    <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- CARD 1: QUICK LAUNCHER & SHORTCUTS -->
+      <section class="glass-card rounded-2xl p-5 flex flex-col justify-between shadow-xl">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-semibold uppercase tracking-wider text-gray-300 flex items-center gap-2">
+              <i class="fa-solid fa-rocket text-cyan-400"></i> Quick Launch
+            </h2>
+            <button onclick="openAddShortcutModal()" class="text-xs bg-gray-800 hover:bg-gray-700 text-cyan-400 px-2.5 py-1 rounded-md transition-all border border-cyan-500/20 flex items-center gap-1">
+              <i class="fa-solid fa-plus"></i> Add
+            </button>
+          </div>
+
+          <!-- Shortcuts Grid -->
+          <div id="shortcuts-grid" class="grid grid-cols-3 gap-3">
+            <!-- Dynamic shortcuts inserted here -->
+          </div>
+        </div>
+        <div class="mt-4 pt-3 border-t border-gray-800 text-right">
+          <span class="text-[11px] text-gray-500 font-mono">Tip: Click tiles to jump to dev targets</span>
+        </div>
+      </section>
+
+      <!-- CARD 2: NETWORK & API MONITOR -->
+      <section class="glass-card rounded-2xl p-5 flex flex-col justify-between shadow-xl">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-semibold uppercase tracking-wider text-gray-300 flex items-center gap-2">
+              <i class="fa-solid fa-network-wired text-emerald-400"></i> Endpoint Monitor
+            </h2>
+            <button onclick="pingAllEndpoints()" class="text-xs bg-gray-800 hover:bg-gray-700 text-emerald-400 px-2.5 py-1 rounded-md transition-all border border-emerald-500/20 flex items-center gap-1">
+              <i class="fa-solid fa-rotate-right" id="refresh-icon"></i> Check Now
+            </button>
+          </div>
+
+          <!-- Endpoints Status List -->
+          <div class="space-y-3 font-mono text-xs" id="endpoints-list">
+            <!-- Items generated dynamically -->
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-gray-800 flex justify-between items-center text-[11px] text-gray-500">
+          <span>Overall Health: <strong class="text-emerald-400">99.8%</strong></span>
+          <span class="font-mono" id="last-ping-time">Updated: Just now</span>
+        </div>
+      </section>
+
+      <!-- CARD 3: CHEATSHEET & SNIPPETS SEARCH -->
+      <section class="glass-card rounded-2xl p-5 flex flex-col justify-between shadow-xl">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-sm font-semibold uppercase tracking-wider text-gray-300 flex items-center gap-2">
+              <i class="fa-solid fa-code text-purple-400"></i> Windows CLI 
+            </h2>
+            <span class="text-[10px] bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded border border-purple-500/20">Fast Copy</span>
+          </div>
+
+          <!-- Search Input -->
+          <div class="relative mb-3">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-gray-500"></i>
+            <input type="text" id="snippet-search" onkeyup="filterSnippets()" placeholder="Search (git, docker, net, linux)..." 
+              class="w-full bg-gray-900/80 border border-gray-800 text-xs rounded-xl pl-8 pr-3 py-2 text-gray-200 placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-all font-mono">
+          </div>
+
+          <!-- Snippet Cards Container -->
+          <div class="space-y-2 max-h-[220px] overflow-y-auto pr-1" id="snippets-container">
+            <!-- Snippets injected by JS -->
+          </div>
+        </div>
+        
+        <div class="mt-3 pt-3 border-t border-gray-800 text-[11px] text-gray-500">
+          Click any snippet box to copy directly to clipboard.
+        </div>
+      </section>
+
+      <!-- CARD 4: TO-DO & SCRATCHPAD (LocalStorage) -->
+      <section class="glass-card rounded-2xl p-5 flex flex-col justify-between shadow-xl lg:col-span-2">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-semibold uppercase tracking-wider text-gray-300 flex items-center gap-2">
+              <i class="fa-solid fa-check-double text-amber-400"></i> Scratchpad & Dev Tasks
+            </h2>
+            <div class="flex items-center gap-2 text-xs">
+              <span class="text-gray-400" id="task-counter">0/0 completed</span>
+            </div>
+          </div>
+
+          <!-- Add Task Input -->
+          <form onsubmit="addTask(event)" class="flex gap-2 mb-4">
+            <input type="text" id="task-input" placeholder="Add sprint task or quick memo..." required
+              class="flex-1 bg-gray-900/80 border border-gray-800 text-xs rounded-xl px-3 py-2 text-gray-200 placeholder-gray-500 focus:outline-none focus:border-amber-500 transition-all">
+            <button type="submit" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 text-xs font-semibold px-4 py-2 rounded-xl transition-all border border-amber-500/30 flex items-center gap-1">
+              <i class="fa-solid fa-plus"></i> Add
+            </button>
+          </form>
+
+          <!-- Task List -->
+          <div class="space-y-2 max-h-[210px] overflow-y-auto pr-1" id="tasks-container">
+            <!-- Tasks dynamic -->
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-gray-800 flex justify-between items-center text-[11px] text-gray-500">
+          <span>Auto-saved to local browser storage</span>
+          <button onclick="clearCompletedTasks()" class="hover:text-amber-400 transition-colors">Clear Completed</button>
+        </div>
+      </section>
+
+      <!-- CARD 5: IT SUBNET / IP CALCULATOR UTILITY -->
+      <section class="glass-card rounded-2xl p-5 flex flex-col justify-between shadow-xl">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-semibold uppercase tracking-wider text-gray-300 flex items-center gap-2">
+              <i class="fa-solid fa-calculator text-blue-400"></i> IPv4 Subnet Calculator
+            </h2>
+            <span class="text-[10px] bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded border border-blue-500/20">Networking</span>
+          </div>
+
+          <!-- Form inputs for IP & CIDR -->
+          <div class="grid grid-cols-3 gap-2 mb-3">
+            <div class="col-span-2">
+              <label class="block text-[10px] font-mono text-gray-400 mb-1">IP Address</label>
+              <input type="text" id="ip-address-input" value="192.168.1.1" oninput="calculateSubnet()" 
+                class="w-full bg-gray-900/80 border border-gray-800 text-xs rounded-xl px-2.5 py-1.5 font-mono text-cyan-300 focus:outline-none focus:border-blue-500">
+            </div>
+            <div>
+              <label class="block text-[10px] font-mono text-gray-400 mb-1">CIDR</label>
+              <select id="cidr-select" onchange="calculateSubnet()" 
+                class="w-full bg-gray-900/80 border border-gray-800 text-xs rounded-xl px-2 py-1.5 font-mono text-cyan-300 focus:outline-none focus:border-blue-500">
+                <option value="24" selected>/24</option>
+                <option value="16">/16</option>
+                <option value="28">/28</option>
+                <option value="30">/30</option>
+                <option value="8">/8</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Calc Output Info -->
+          <div class="space-y-2 bg-gray-900/60 p-3 rounded-xl border border-gray-800 text-xs font-mono">
+            <div class="flex justify-between">
+              <span class="text-gray-400">Subnet Mask:</span>
+              <span id="res-mask" class="text-gray-200">255.255.255.0</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-400">Network Addr:</span>
+              <span id="res-net" class="text-emerald-400">192.168.1.0</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-400">Broadcast:</span>
+              <span id="res-bcast" class="text-amber-400">192.168.1.255</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-400">Usable Hosts:</span>
+              <span id="res-hosts" class="text-cyan-400">254</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-gray-800 text-right">
+          <span class="text-[11px] text-gray-500 font-mono">Real-time Bitwise Calculation</span>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="text-center py-4 text-xs text-gray-500 font-mono flex flex-col md:flex-row justify-between items-center gap-2 border-t border-gray-800/60 pt-4">
+      <div>Local Dev Environment; Designed by Pauly</div>
+      <div class="flex gap-4">
+        <a href="https://github.com" target="_blank" class="hover:text-cyan-400 transition-colors">GitHub</a>
+        <a href="https://stackoverflow.com" target="_blank" class="hover:text-cyan-400 transition-colors">StackOverflow</a>
+        <a href="https://developer.mozilla.org" target="_blank" class="hover:text-cyan-400 transition-colors">MDN Docs</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- NOTIFICATION TOAST -->
+  <div id="toast" class="fixed bottom-5 right-5 bg-cyan-500 text-gray-950 px-4 py-2.5 rounded-xl shadow-2xl font-semibold text-xs transition-all duration-300 transform translate-y-20 opacity-0 flex items-center gap-2 z-50">
+    <i class="fa-solid fa-circle-check"></i>
+    <span id="toast-message">Copied to clipboard!</span>
+  </div>
+
+  <!-- ADD SHORTCUT MODAL -->
+  <div id="shortcut-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="glass-card rounded-2xl p-6 w-full max-w-sm space-y-4 border border-gray-700 shadow-2xl">
+      <h3 class="text-lg font-bold text-white flex items-center gap-2">
+        <i class="fa-solid fa-link text-cyan-400"></i> Add New Shortcut
+      </h3>
+      <form onsubmit="saveShortcut(event)" class="space-y-3">
+        <div>
+          <label class="block text-xs font-mono text-gray-400 mb-1">Title</label>
+          <input type="text" id="shortcut-title" placeholder="e.g. Local React Server" required
+            class="w-full bg-gray-900 border border-gray-800 text-xs rounded-xl p-2.5 text-gray-200 focus:outline-none focus:border-cyan-500">
+        </div>
+        <div>
+          <label class="block text-xs font-mono text-gray-400 mb-1">URL</label>
+          <input type="text" id="shortcut-url" placeholder="http://localhost:3000" required
+            class="w-full bg-gray-900 border border-gray-800 text-xs rounded-xl p-2.5 text-gray-200 focus:outline-none focus:border-cyan-500">
+        </div>
+        <div>
+          <label class="block text-xs font-mono text-gray-400 mb-1">Icon FontAwesome Class</label>
+          <input type="text" id="shortcut-icon" placeholder="fa-brands fa-react" value="fa-solid fa-globe" required
+            class="w-full bg-gray-900 border border-gray-800 text-xs rounded-xl p-2.5 text-gray-200 focus:outline-none focus:border-cyan-500">
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeAddShortcutModal()" class="px-4 py-2 text-xs text-gray-400 hover:text-white transition-colors">Cancel</button>
+          <button type="submit" class="bg-cyan-500 hover:bg-cyan-400 text-black font-semibold text-xs px-4 py-2 rounded-xl transition-all">Save Tile</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // INITIALIZATION & STATE MANAGEMENT
+    document.addEventListener('DOMContentLoaded', () => {
+      initClock();
+      renderShortcuts();
+      renderEndpoints();
+      renderSnippets();
+      renderTasks();
+      calculateSubnet();
+    });
+
+    // 1. LIVE CLOCK & GREETING
+    function initClock() {
+      const updateClock = () => {
+        const now = new Date();
+        
+        // Time
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        document.getElementById('live-time').innerText = `${hours}:${minutes}:${seconds}`;
+        
+        // Date
+        const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+        document.getElementById('live-date').innerText = now.toLocaleDateString('en-US', options);
+
+        // Greeting dynamic
+        const hr = now.getHours();
+        let greeting = "Hello, Pauly";
+        if (hr < 12) greeting = "Good Morning, Pauly";
+        else if (hr < 18) greeting = "Good Afternoon, Pauly";
+        else greeting = "Good Evening, Pauly";
+        
+        document.getElementById('greeting-text').innerHTML = `${greeting} <span class="text-cyan-400">⚡</span>`;
+      };
+      
+      updateClock();
+      setInterval(updateClock, 1000);
+    }
+
+// --- Live Weather API Fetch ---
+async function fetchWeather() {
+    const apiKey = "a02696e1a9a28b7081cce6b39a02a2dc"; 
+    const city = "Karatina"; 
+
+    try {
+        const response = await fetch(
+            `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`
+        );
+        const data = await response.json();
+
+        if (response.ok) {
+            // 1. Update temperature
+            const tempEl = document.getElementById('weather-temp');
+            if (tempEl) tempEl.textContent = `${Math.round(data.main.temp)}°C`;
+
+            // 2. Update city name dynamically from API response
+            const cityEl = document.getElementById('weather-city');
+            if (cityEl) cityEl.textContent = data.name;
+
+            // 3. Update weather description
+            const descEl = document.getElementById('weather-desc');
+            if (descEl) descEl.textContent = data.weather[0].description;
+        } else {
+            console.error("Weather API error:", data.message);
+        }
+    } catch (err) {
+        console.error("Failed to fetch weather data:", err);
+    }
+}
+
+// Call weather function on page load & refresh every 10 minutes
+fetchWeather();
+setInterval(fetchWeather, 600000);
+
+    // 2. SHORTCUTS MANAGEMENT (LocalStorage)
+    const defaultShortcuts = [
+      { id: 1, title: 'GitHub', url: 'https://github.com', icon: 'fa-brands fa-github', color: 'hover:border-purple-500/50' },
+      { id: 2, title: 'Local 8080', url: 'http://localhost:8080', icon: 'fa-solid fa-server', color: 'hover:border-emerald-500/50' },
+      { id: 3, title: 'Stack Overflow', url: 'https://stackoverflow.com', icon: 'fa-brands fa-stack-overflow', color: 'hover:border-amber-500/50' },
+      { id: 4, title: 'MDN Web Docs', url: 'https://developer.mozilla.org', icon: 'fa-solid fa-book-bookmark', color: 'hover:border-cyan-500/50' },
+      { id: 5, title: 'ChatGPT', url: 'https://chatgpt.com', icon: 'fa-solid fa-robot', color: 'hover:border-teal-500/50' },
+      { id: 6, title: 'Spotify', url: 'https://open.spotify.com', icon: 'fa-solid fa-music', color: 'hover:border-emerald-500/50' },
+    ];
+
+    function getShortcuts() {
+      const stored = localStorage.getItem('dev_hub_shortcuts');
+      return stored ? JSON.parse(stored) : defaultShortcuts;
+    }
+
+    function renderShortcuts() {
+      const shortcuts = getShortcuts();
+      const container = document.getElementById('shortcuts-grid');
+      container.innerHTML = shortcuts.map(s => `
+        <a href="${s.url}" target="_blank" class="glass-card p-3 rounded-xl flex flex-col items-center justify-center gap-2 hover:bg-gray-800/80 transition-all border border-gray-800 hover:scale-[1.03] group relative">
+          <i class="${s.icon} text-xl text-cyan-400 group-hover:scale-110 transition-transform"></i>
+          <span class="text-[11px] font-medium text-gray-300 truncate w-full text-center">${s.title}</span>
+        </a>
+      `).join('');
+    }
+
+    function openAddShortcutModal() {
+      document.getElementById('shortcut-modal').classList.remove('hidden');
+      document.getElementById('shortcut-modal').classList.add('flex');
+    }
+
+    function closeAddShortcutModal() {
+      document.getElementById('shortcut-modal').classList.add('hidden');
+      document.getElementById('shortcut-modal').classList.remove('flex');
+    }
+
+    function saveShortcut(e) {
+      e.preventDefault();
+      const title = document.getElementById('shortcut-title').value;
+      const url = document.getElementById('shortcut-url').value;
+      const icon = document.getElementById('shortcut-icon').value || 'fa-solid fa-globe';
+
+      const list = getShortcuts();
+      list.push({ id: Date.now(), title, url, icon });
+      localStorage.setItem('dev_hub_shortcuts', JSON.stringify(list));
+      
+      renderShortcuts();
+      closeAddShortcutModal();
+      showToast('Shortcut added successfully!');
+    }
+
+    // 3. ENDPOINT MONITOR (Simulation)
+    const endpoints = [
+      { name: 'Localhost:3000 (React)', url: 'http://localhost:3000', status: 'online', ping: '12ms' },
+      { name: 'Local DB (PostgreSQL)', url: 'localhost:5432', status: 'online', ping: '4ms' },
+      { name: 'Google DNS (8.8.8.8)', url: '8.8.8.8', status: 'online', ping: '24ms' },
+      { name: 'GitHub API Endpoint', url: 'api.github.com', status: 'online', ping: '58ms' }
+    ];
+
+    function renderEndpoints() {
+      const container = document.getElementById('endpoints-list');
+      container.innerHTML = endpoints.map(ep => `
+        <div class="flex items-center justify-between p-2.5 rounded-xl bg-gray-900/40 border border-gray-800">
+          <div class="flex items-center gap-2.5 truncate">
+            <span class="w-2 h-2 rounded-full ${ep.status === 'online' ? 'bg-emerald-400 shadow-[0_0_8px_#34d399]' : 'bg-red-400'}"></span>
+            <span class="text-gray-300 truncate">${ep.name}</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-[10px] text-gray-500 font-mono">${ep.ping}</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded ${ep.status === 'online' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400'}">
+              200 OK
+            </span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function pingAllEndpoints() {
+      const icon = document.getElementById('refresh-icon');
+      icon.classList.add('animate-spin');
+      
+      setTimeout(() => {
+        // Randomize pings slightly for effect
+        endpoints.forEach(ep => {
+          ep.ping = Math.floor(Math.random() * 40 + 5) + 'ms';
+        });
+        renderEndpoints();
+        icon.classList.remove('animate-spin');
+        document.getElementById('last-ping-time').innerText = 'Updated: ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+        showToast('Endpoints health refreshed!');
+      }, 600);
+    }
+
+    // 4. CLI CHEATSHEETS & SEARCH
+    const snippets = [
+      { category: 'Navigation', title: 'List Directory Contents', code: 'Get-ChildItem (or ls) | dir' },
+      { category: 'Navigation', title: 'Change Directory', code: 'Set-Location <path> (or cd <path>)' },
+      { category: 'File Management', title: 'Create a New File', code: 'New-Item filename.txt | type nul > filename.txt' },
+      { category: 'Networking', title: 'Check IP Config / Adapters', code: 'ipconfig' },
+      { category: 'Networking', title: 'Test Network Connection', code: 'ping <ip/domain>' },
+      { category: 'Processes', title: 'Find Process Using Port 5500', code: 'Get-NetTCPConnection -LocalPort 5500 | netstat -ano | findstr 5500' },
+      { category: 'Processes', title: 'Kill a Running Task/Server', code: 'Stop-Process -Id <PID>' }
+    ];
+    function renderSnippets(filtered = snippets) {
+      const container = document.getElementById('snippets-container');
+      if(filtered.length === 0) {
+        container.innerHTML = `<div class="text-xs text-gray-500 py-4 text-center">No snippets found</div>`;
+        return;
+      }
+      container.innerHTML = filtered.map(s => `
+        <div onclick="copyText('${s.code}')" class="p-2.5 rounded-xl bg-gray-900/60 hover:bg-gray-800/80 border border-gray-800/80 cursor-pointer transition-all group">
+          <div class="flex justify-between items-center mb-1">
+            <span class="text-[11px] font-semibold text-gray-300 group-hover:text-purple-300">${s.title}</span>
+            <span class="text-[9px] bg-purple-500/10 text-purple-400 px-1.5 py-0.5 rounded font-mono border border-purple-500/20">${s.category}</span>
+          </div>
+          <div class="font-mono text-[10px] text-purple-400/90 truncate flex justify-between items-center">
+            <span>$ ${s.code}</span>
+            <i class="fa-regular fa-copy text-gray-500 group-hover:text-purple-400 transition-colors ml-2"></i>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterSnippets() {
+      const query = document.getElementById('snippet-search').value.toLowerCase();
+      const filtered = snippets.filter(s => 
+        s.title.toLowerCase().includes(query) || 
+        s.category.toLowerCase().includes(query) || 
+        s.code.toLowerCase().includes(query)
+      );
+      renderSnippets(filtered);
+    }
+
+    // 5. TO-DO / TASK SCRATCHPAD (LocalStorage)
+    function getTasks() {
+      const stored = localStorage.getItem('dev_hub_tasks');
+      return stored ? JSON.parse(stored) : [
+        { id: 1, text: 'Review Data Structures assignment', completed: false },
+        { id: 2, text: 'Run database migration on local server', completed: true }
+      ];
+    }
+
+    function renderTasks() {
+      const tasks = getTasks();
+      const container = document.getElementById('tasks-container');
+      
+      const completedCount = tasks.filter(t => t.completed).length;
+      document.getElementById('task-counter').innerText = `${completedCount}/${tasks.length} completed`;
+
+      if (tasks.length === 0) {
+        container.innerHTML = `<div class="text-xs text-gray-500 py-4 text-center">No active tasks. Add one above!</div>`;
+        return;
+      }
+
+      container.innerHTML = tasks.map(t => `
+        <div class="flex items-center justify-between p-2.5 rounded-xl bg-gray-900/50 border border-gray-800/80 hover:border-gray-700 transition-all">
+          <label class="flex items-center gap-3 cursor-pointer flex-1 min-w-0">
+            <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="toggleTask(${t.id})" 
+              class="w-4 h-4 rounded border-gray-700 bg-gray-900 text-amber-500 focus:ring-0 focus:ring-offset-0 cursor-pointer">
+            <span class="text-xs ${t.completed ? 'line-through text-gray-500' : 'text-gray-200'} truncate">${t.text}</span>
+          </label>
+          <button onclick="deleteTask(${t.id})" class="text-gray-500 hover:text-red-400 text-xs px-2 transition-colors">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function addTask(e) {
+      e.preventDefault();
+      const input = document.getElementById('task-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const tasks = getTasks();
+      tasks.push({ id: Date.now(), text, completed: false });
+      localStorage.setItem('dev_hub_tasks', JSON.stringify(tasks));
+
+      input.value = '';
+      renderTasks();
+    }
+
+    function toggleTask(id) {
+      const tasks = getTasks();
+      const updated = tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
+      localStorage.setItem('dev_hub_tasks', JSON.stringify(updated));
+      renderTasks();
+    }
+
+    function deleteTask(id) {
+      const tasks = getTasks().filter(t => t.id !== id);
+      localStorage.setItem('dev_hub_tasks', JSON.stringify(tasks));
+      renderTasks();
+    }
+
+    function clearCompletedTasks() {
+      const tasks = getTasks().filter(t => !t.completed);
+      localStorage.setItem('dev_hub_tasks', JSON.stringify(tasks));
+      renderTasks();
+      showToast('Completed tasks cleared');
+    }
+
+    // 6. SUBNET / IP CALCULATOR LOGIC
+    function calculateSubnet() {
+      const ip = document.getElementById('ip-address-input').value.trim();
+      const cidr = parseInt(document.getElementById('cidr-select').value);
+
+      const ipPattern = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
+      if (!ipPattern.test(ip)) {
+        return; // Invalid format
+      }
+
+      const octets = ip.split('.').map(Number);
+      if (octets.some(o => o < 0 || o > 255)) return;
+
+      // Convert IP to 32-bit integer
+      const ipNum = (octets[0] << 24) | (octets[1] << 16) | (octets[2] << 8) | octets[3];
+      
+      // Calculate Mask
+      const maskNum = (0xFFFFFFFF << (32 - cidr)) >>> 0;
+      const maskOctets = [
+        (maskNum >>> 24) & 255,
+        (maskNum >>> 16) & 255,
+        (maskNum >>> 8) & 255,
+        maskNum & 255
+      ];
+
+      // Calculate Network & Broadcast
+      const netNum = (ipNum & maskNum) >>> 0;
+      const netOctets = [
+        (netNum >>> 24) & 255,
+        (netNum >>> 16) & 255,
+        (netNum >>> 8) & 255,
+        netNum & 255
+      ];
+
+      const bcastNum = (netNum | (~maskNum >>> 0)) >>> 0;
+      const bcastOctets = [
+        (bcastNum >>> 24) & 255,
+        (bcastNum >>> 16) & 255,
+        (bcastNum >>> 8) & 255,
+        bcastNum & 255
+      ];
+
+      const usableHosts = cidr >= 31 ? 0 : Math.pow(2, 32 - cidr) - 2;
+
+      // Update UI
+      document.getElementById('res-mask').innerText = maskOctets.join('.');
+      document.getElementById('res-net').innerText = netOctets.join('.');
+      document.getElementById('res-bcast').innerText = bcastOctets.join('.');
+      document.getElementById('res-hosts').innerText = usableHosts.toLocaleString();
+    }
+
+    // UTILITY: CLIPBOARD & TOAST
+    function copyText(text) {
+      // execCommand fallback for seamless webview execution
+      const input = document.createElement('textarea');
+      input.value = text;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      document.body.removeChild(input);
+
+      showToast(`Copied: "${text}"`);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-message').innerText = msg;
+      
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 2500);
+    }
+    // --- Service Worker Registration ---
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+            .then((reg) => console.log('Service Worker registered successfully! Scope:', reg.scope))
+            .catch((err) => console.log('Service Worker registration failed:', err));
+    });
+}
+  </script>
+</body>
+</html>
